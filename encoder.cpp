@@ -18,14 +18,16 @@ int main() {
   // Define the galois field for the individual symbols
   galois::GaloisField gf(symbol_length, prim_poly);
 
-  // Create the polynomial given the individual symbols
+  // Create individual symbols as an array of symbols
   galois::GaloisFieldElement gfe[data_length] = {
     galois::GaloisFieldElement(&gf, 255),
     galois::GaloisFieldElement(&gf, 35)
   };
 
+  // Transform the array of symbols into a polynomial
   galois::GaloisFieldPolynomial polynomial(&gf,data_length-1,gfe);
 
+  // Shift the polynomial by the parity length 
   polynomial = polynomial << parity_length;
 
   std::cout << polynomial;
