@@ -2,18 +2,33 @@
 #include <string>
 #include <sstream>
 #include "GaloisFieldArithmetic/GaloisField.h"
+#include "GaloisFieldArithmetic/GaloisFieldElement.h"
+#include "GaloisFieldArithmetic/GaloisFieldPolynomial.h"
 
 int main() {
-  /*
-    p(x) = 1x^8+1x^7+0x^6+0x^5+0x^4+0x^3+1x^2+1x^1+1x^0
-           1    1    0    0    0    0    1    1    1
-  */
-  unsigned int prim_poly[9] = {1,1,1,0,0,0,0,1,1};
-  /*
-    A Galois Field of type GF(2^8)
-  */
 
-  galois::GaloisField gf(8, prim_poly);
+  const unsigned int symbol_length = 8;
+  const unsigned int codeword_length = 4;
+  const unsigned int data_length = 2;
+  unsigned int parity_length = codeword_length - data_length;
+
+  // Primitive polynomial that acts on the individual symbols 
+  unsigned int prim_poly[symbol_length+1] = {1,1,1,0,0,0,0,1,1};
+
+  // Define the galois field for the individual symbols
+  galois::GaloisField gf(symbol_length, prim_poly);
+
+  // Create the polynomial given the individual symbols
+  galois::GaloisFieldElement gfe[data_length] = {
+    galois::GaloisFieldElement(&gf, 255),
+    galois::GaloisFieldElement(&gf, 35)
+  };
+
+  galois::GaloisFieldPolynomial polynomial(&gf,data_length-1,gfe);
+
+  polynomial = polynomial << parity_length;
+
+  std::cout << polynomial;
 
   return 0;
 }
