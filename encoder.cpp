@@ -22,7 +22,9 @@ int main() {
   // Create individual symbols as an array of symbols
   galois::GaloisFieldElement gfe[data_length] = {
     galois::GaloisFieldElement(&gf, 5),
-    galois::GaloisFieldElement(&gf, 3)
+    galois::GaloisFieldElement(&gf, 3),
+    galois::GaloisFieldElement(&gf, 2),
+    galois::GaloisFieldElement(&gf, 4)
   };
 
   // Transform the array of symbols into a polynomial
