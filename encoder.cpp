@@ -19,7 +19,7 @@ int main() {
   // The order is swapped from which it is written.
   // p(x) = 1x^3+0x^2+1x^1+1x^0
   //        1    0    1    1
-  unsigned int prim_poly[galois_field_exp+1] = {1,0,1,1};
+  unsigned int prim_poly[galois_field_exp+1] = {1,1,0,1};
 
   // Define the galois field for the individual symbols
   galois::GaloisField gf(galois_field_exp, prim_poly);
