@@ -14,6 +14,11 @@ int main() {
   unsigned int parity_length = codeword_length - data_length;
 
   // Primitive polynomial that acts on the individual symbols 
+  // Important note: the far right number is the coefficient of the highest degree
+  // while the far left is the coefficient of the lowest degree. 
+  // The order is swapped from which it is written.
+  // p(x) = 1x^3+0x^2+1x^1+1x^0
+  //        1    0    1    1
   unsigned int prim_poly[galois_field_exp+1] = {1,0,1,1};
 
   // Define the galois field for the individual symbols
