@@ -38,7 +38,48 @@ int main() {
   // Shift the polynomial by the parity length 
   polynomial = polynomial << parity_length;
 
-  std::cout << polynomial;
+  std::cout << polynomial << "\n";
+
+  galois::GaloisFieldElement gfe1[2] = {
+    galois::GaloisFieldElement(&gf, 2),
+    galois::GaloisFieldElement(&gf, 1),
+  };
+
+  galois::GaloisFieldElement gfe2[2] = {
+    galois::GaloisFieldElement(&gf, 4),
+    galois::GaloisFieldElement(&gf, 1),
+  };
+
+  galois::GaloisFieldElement gfe3[2] = {
+    galois::GaloisFieldElement(&gf, 3),
+    galois::GaloisFieldElement(&gf, 1),
+  };
+
+  galois::GaloisFieldElement gfe4[2] = {
+    galois::GaloisFieldElement(&gf, -3),
+    galois::GaloisFieldElement(&gf, 1),
+  };
+
+  galois::GaloisFieldPolynomial polynomial1(&gf,1,gfe1);
+  galois::GaloisFieldPolynomial polynomial2(&gf,1,gfe2);
+  galois::GaloisFieldPolynomial polynomial3(&gf,1,gfe3);
+  galois::GaloisFieldPolynomial polynomial4(&gf,1,gfe4);
+
+  std::cout << polynomial1 << "\n";
+  std::cout << polynomial2 << "\n";
+  std::cout << polynomial3 << "\n";
+
+  galois::GaloisFieldPolynomial generator_polynomial = (polynomial1 * polynomial2 * polynomial3);
+
+  std::cout << generator_polynomial << "\n";
+
+  galois::GaloisFieldPolynomial parity_polynomial = polynomial % generator_polynomial; 
+
+  std::cout << parity_polynomial << "\n";
+
+  galois::GaloisFieldPolynomial message = polynomial + parity_polynomial;
+
+  std::cout << message << "\n";
 
   return 0;
 }
