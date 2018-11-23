@@ -38,7 +38,7 @@ int main() {
   // Shift the polynomial by the parity length 
   polynomial = polynomial << parity_length;
 
-  std::cout << polynomial << "\n";
+  std::cout << "Shifted message polynomial: " << polynomial << "\n";
 
   galois::GaloisFieldElement gfe1[2] = {
     galois::GaloisFieldElement(&gf, 2),
@@ -65,21 +65,21 @@ int main() {
   galois::GaloisFieldPolynomial polynomial3(&gf,1,gfe3);
   galois::GaloisFieldPolynomial polynomial4(&gf,1,gfe4);
 
-  std::cout << polynomial1 << "\n";
-  std::cout << polynomial2 << "\n";
-  std::cout << polynomial3 << "\n";
+  std::cout << "Generator polynomial term 1: " << polynomial1 << "\n";
+  std::cout << "Generator polynomial term 2: " << polynomial2 << "\n";
+  std::cout << "Generator polynomial term 3: " << polynomial3 << "\n";
 
   galois::GaloisFieldPolynomial generator_polynomial = (polynomial1 * polynomial2 * polynomial3);
 
-  std::cout << generator_polynomial << "\n";
+  std::cout << "Generator polynomial: " << generator_polynomial << "\n";
 
   galois::GaloisFieldPolynomial parity_polynomial = polynomial % generator_polynomial; 
 
-  std::cout << parity_polynomial << "\n";
+  std::cout << "Parity polynomial: " << parity_polynomial << "\n";
 
   galois::GaloisFieldPolynomial message = polynomial + parity_polynomial;
 
-  std::cout << message << "\n";
+  std::cout << "Encoded messgae polynomial: " << message << "\n";
 
   return 0;
 }
