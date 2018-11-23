@@ -18,19 +18,19 @@ galois::GaloisFieldElement summation(
     galois::GaloisField* gf,
     galois::GaloisFieldPolynomial connection_poly, 
     galois::GaloisFieldElement* syndromes,
-    unsigned int current_iteration) {
-
-  // If the current iteration is less than 1,
-  // return a 0 galois field element
-  if(current_iteration < 1) {
-    return galois::GaloisFieldElement(gf, 0);
-  }
+    unsigned int current_iteration,
+    unsigned int len_lfsr) {
 
   // Initialize the discrepancy to be the syndrome at k
   galois::GaloisFieldElement discrepancy = syndromes[current_iteration];
 
+  // Return discrepancy if length of lfsr is less than 1
+  if(len_lfsr < 1) {
+    return discrepancy;
+  }
+
   // Perform the summation
-  for(int i = 1; i <= current_iteration; i++) {
+  for(int i = 1; i <= len_lfsr; i++) {
     discrepancy = discrepancy + (connection_poly[i] * syndromes[current_iteration-i]);
   }
 
@@ -63,12 +63,14 @@ int main() {
     galois::GaloisFieldElement(&gf, 6),
     galois::GaloisFieldElement(&gf, 5),
     galois::GaloisFieldElement(&gf, 3),
+    galois::GaloisFieldElement(&gf, 2),
     galois::GaloisFieldElement(&gf, 3),
-    galois::GaloisFieldElement(&gf, 4),
   };
 
   // Transform the array of symbols into a polynomial
   galois::GaloisFieldPolynomial polynomial(&gf,codeword_length-1,gfe);
+
+  std::cout << "Received polynomial: " << polynomial << "\n";
 
   // Create the alpha values used to generate generator polynomia
   galois::GaloisFieldElement generator_poly_alphas[parity_length] = {
@@ -101,19 +103,19 @@ int main() {
 
   for(int k = 0; k < parity_length; k++) {
     std::cout << "Berlekamp Massey Iteration " << k << "\n";
-    current_discrepancy = syndromes[k] + summation(&gf, connection_poly, syndromes, k); 
+    current_discrepancy = summation(&gf, connection_poly, syndromes, k, len_lfsr); 
     std::cout << "Current discrepancy: " << current_discrepancy << "\n";
     // No change in polynomial
     if(current_discrepancy.poly() == 0) {
       std::cout << "  Detected no change in poly" << "\n";
       amount_shift = amount_shift + 1;
     } else {
-      if(2*len_lfsr >= k) {
+      if((2*len_lfsr) > k) {
         std::cout << "  No length change" << "\n";
         gfe_poly = galois::GaloisFieldPolynomial(&gf, 0, initial_val);
         gfe_poly <<= amount_shift;
         gfe_poly[amount_shift] *= (current_discrepancy * prev_discrepancy.inverse());
-        connection_poly = connection_poly - (gfe_poly * prev_connection_poly);
+        connection_poly = connection_poly + (gfe_poly * prev_connection_poly);
 
         amount_shift = amount_shift + 1;
       } else {
@@ -122,16 +124,67 @@ int main() {
         gfe_poly = galois::GaloisFieldPolynomial(&gf, 0, initial_val);
         gfe_poly <<= amount_shift;
         gfe_poly[amount_shift] *= (current_discrepancy * prev_discrepancy.inverse());
-        connection_poly = connection_poly - (gfe_poly * prev_connection_poly);
-        len_lfsr = k - len_lfsr;
+        connection_poly = connection_poly + (gfe_poly * prev_connection_poly);
+        len_lfsr = k + 1 - len_lfsr;
         prev_connection_poly = tmp_gfe_poly;
         prev_discrepancy = current_discrepancy;
         amount_shift = 1;
       }
     }
+    std::cout << "Connection polynomial after iteration " << k << ": " << connection_poly << "\n";
   }
 
-  std::cout << "Connection polynomial after BM Algorithm: " << connection_poly << "\n";
+  // Connection polynomial after BM Algoritm is the error locator polynomial
+  std::cout << "Error locator polynomial: " << connection_poly << "\n";
 
+  unsigned int root = 0;
+  galois::GaloisFieldElement error_locator_root;
+  galois::GaloisFieldElement error_locator_roots[connection_poly.deg()];
+
+  // Perform Chien search brute force algorithm to find all possible roots for the connection polynomial
+  for(int i = 1; i <= codeword_length; i++) {
+    error_locator_root = connection_poly(galois::GaloisFieldElement(&gf, i)); 
+    std::cout << "Chien search " << i << " :" << error_locator_root << "\n";
+    if(error_locator_root.poly() == 0) {
+      error_locator_roots[root] = galois::GaloisFieldElement(&gf, i);
+      std::cout << "Found a root : " << error_locator_roots[root] << "\n";
+      root = root + 1;
+    }
+  }
+
+  galois::GaloisFieldPolynomial gfe_poly2 = galois::GaloisFieldPolynomial(&gf, 0, initial_val);
+  gfe_poly2 <<= parity_length;
+  galois::GaloisFieldPolynomial syndromes_poly(&gf, parity_length-1, syndromes);
+  galois::GaloisFieldPolynomial error_evaluator_poly = (syndromes_poly * connection_poly) % gfe_poly2;
+  std::cout << "Error evaluator polynomial: " << error_evaluator_poly << "\n";
+
+  // Perform the Forney Algorithm
+  galois::GaloisFieldPolynomial connection_deriv_poly = connection_poly.derivative();
+  std::cout << "Derivative of Error locator polynomial: " << connection_deriv_poly << "\n"; 
+
+
+  galois::GaloisFieldPolynomial error_poly;
+  error_poly.set_degree(10);
+  galois::GaloisFieldPolynomial error_poly_term;
+  galois::GaloisFieldElement error_magnitude[connection_poly.deg()];
+  for(int i = 0; i < root; i++) {
+    error_magnitude[i] = (error_evaluator_poly(error_locator_roots[i])) / connection_deriv_poly(error_locator_roots[i]) ;
+    std::cout << "Error magnitude value: " << error_magnitude[i] << "\n"; 
+    error_poly_term = galois::GaloisFieldPolynomial(&gf, 0, initial_val);
+    error_poly_term <<= 6;
+    error_poly_term[6] *= error_magnitude[i];
+
+    if(i == 0) {
+      error_poly = error_poly_term;
+    } else {
+      error_poly += error_poly_term;
+    }
+
+    std::cout << "Error polynomial term: " << error_poly_term << "\n";
+  }
+
+  std::cout << "Error polynomial: " << error_poly << "\n";
+  std::cout << "Decoded message: " << polynomial + error_poly << "\n"; 
+  
   return 0;
 }
