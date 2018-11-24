@@ -42,7 +42,7 @@ int main() {
 
   const unsigned int galois_field_exp = 3;
   const unsigned int codeword_length = pow(2,3) - 1;
-  const unsigned int data_length = 4;
+  const unsigned int data_length = 3;
   unsigned int parity_length = codeword_length - data_length;
 
   // Primitive polynomial that acts on the individual symbols 
@@ -58,13 +58,13 @@ int main() {
 
   // Create received message 
   galois::GaloisFieldElement gfe[codeword_length] = {
-    galois::GaloisFieldElement(&gf, 6),
     galois::GaloisFieldElement(&gf, 5),
-    galois::GaloisFieldElement(&gf, 3),
-    galois::GaloisFieldElement(&gf, 5),
-    galois::GaloisFieldElement(&gf, 3),
     galois::GaloisFieldElement(&gf, 2),
+    galois::GaloisFieldElement(&gf, 1),
     galois::GaloisFieldElement(&gf, 4),
+    galois::GaloisFieldElement(&gf, 5),
+    galois::GaloisFieldElement(&gf, 3),
+    galois::GaloisFieldElement(&gf, 1),
   };
 
   // Transform the array of symbols into a polynomial
@@ -77,6 +77,7 @@ int main() {
     galois::GaloisFieldElement(&gf, 2),
     galois::GaloisFieldElement(&gf, 4),
     galois::GaloisFieldElement(&gf, 3),
+    galois::GaloisFieldElement(&gf, 6)
   };
 
   galois::GaloisFieldElement syndromes[parity_length];

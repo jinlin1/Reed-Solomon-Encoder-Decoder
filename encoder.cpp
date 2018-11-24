@@ -10,7 +10,7 @@ int main() {
 
   const unsigned int galois_field_exp = 3;
   const unsigned int codeword_length = pow(2,3) - 1;
-  const unsigned int data_length = 4;
+  const unsigned int data_length = 3;
   unsigned int parity_length = codeword_length - data_length;
 
   // Primitive polynomial that acts on the individual symbols 
@@ -28,8 +28,7 @@ int main() {
   galois::GaloisFieldElement gfe[data_length] = {
     galois::GaloisFieldElement(&gf, 5),
     galois::GaloisFieldElement(&gf, 3),
-    galois::GaloisFieldElement(&gf, 2),
-    galois::GaloisFieldElement(&gf, 4)
+    galois::GaloisFieldElement(&gf, 2)
   };
 
   // Transform the array of symbols into a polynomial
@@ -56,7 +55,7 @@ int main() {
   };
 
   galois::GaloisFieldElement gfe4[2] = {
-    galois::GaloisFieldElement(&gf, -3),
+    galois::GaloisFieldElement(&gf, 6),
     galois::GaloisFieldElement(&gf, 1),
   };
 
@@ -68,8 +67,9 @@ int main() {
   std::cout << "Generator polynomial term 1: " << polynomial1 << "\n";
   std::cout << "Generator polynomial term 2: " << polynomial2 << "\n";
   std::cout << "Generator polynomial term 3: " << polynomial3 << "\n";
+  std::cout << "Generator polynomial term 4: " << polynomial4 << "\n";
 
-  galois::GaloisFieldPolynomial generator_polynomial = (polynomial1 * polynomial2 * polynomial3);
+  galois::GaloisFieldPolynomial generator_polynomial = (polynomial1 * polynomial2 * polynomial3 * polynomial4);
 
   std::cout << "Generator polynomial: " << generator_polynomial << "\n";
 
