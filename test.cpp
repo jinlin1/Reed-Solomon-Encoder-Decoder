@@ -31,4 +31,6 @@ int main(){
   std::cout << element7.inverse() << "\n";
   std::cout << element2 + element3 << "\n";
 
+  std::cout << gf.index(4) << "\n";
+
 }

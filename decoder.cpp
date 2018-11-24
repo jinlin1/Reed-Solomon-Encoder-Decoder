@@ -2,6 +2,7 @@
 #include <string>
 #include <sstream>
 #include <math.h> 
+#include <map>
 #include "GaloisFieldArithmetic/GaloisField.h"
 #include "GaloisFieldArithmetic/GaloisFieldElement.h"
 #include "GaloisFieldArithmetic/GaloisFieldPolynomial.h"
@@ -64,7 +65,7 @@ int main() {
     galois::GaloisFieldElement(&gf, 5),
     galois::GaloisFieldElement(&gf, 3),
     galois::GaloisFieldElement(&gf, 2),
-    galois::GaloisFieldElement(&gf, 3),
+    galois::GaloisFieldElement(&gf, 5),
   };
 
   // Transform the array of symbols into a polynomial
@@ -152,6 +153,8 @@ int main() {
     }
   }
 
+  // Generate error evaluator polynomial / error magnitude polynomial
+  // Same concept but different names depending on textbook
   galois::GaloisFieldPolynomial gfe_poly2 = galois::GaloisFieldPolynomial(&gf, 0, initial_val);
   gfe_poly2 <<= parity_length;
   galois::GaloisFieldPolynomial syndromes_poly(&gf, parity_length-1, syndromes);
@@ -164,15 +167,14 @@ int main() {
 
 
   galois::GaloisFieldPolynomial error_poly;
-  error_poly.set_degree(10);
   galois::GaloisFieldPolynomial error_poly_term;
   galois::GaloisFieldElement error_magnitude[connection_poly.deg()];
   for(int i = 0; i < root; i++) {
     error_magnitude[i] = (error_evaluator_poly(error_locator_roots[i])) / connection_deriv_poly(error_locator_roots[i]) ;
     std::cout << "Error magnitude value: " << error_magnitude[i] << "\n"; 
     error_poly_term = galois::GaloisFieldPolynomial(&gf, 0, initial_val);
-    error_poly_term <<= 6;
-    error_poly_term[6] *= error_magnitude[i];
+    error_poly_term <<= gf.index(error_locator_roots[i].inverse());
+    error_poly_term[gf.index(error_locator_roots[i].inverse())] *= error_magnitude[i];
 
     if(i == 0) {
       error_poly = error_poly_term;
