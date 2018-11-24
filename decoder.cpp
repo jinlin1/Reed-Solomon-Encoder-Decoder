@@ -2,7 +2,6 @@
 #include <string>
 #include <sstream>
 #include <math.h> 
-#include <map>
 #include "GaloisFieldArithmetic/GaloisField.h"
 #include "GaloisFieldArithmetic/GaloisFieldElement.h"
 #include "GaloisFieldArithmetic/GaloisFieldPolynomial.h"
