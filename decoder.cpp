@@ -60,11 +60,11 @@ int main() {
   galois::GaloisFieldElement gfe[codeword_length] = {
     galois::GaloisFieldElement(&gf, 6),
     galois::GaloisFieldElement(&gf, 5),
-    galois::GaloisFieldElement(&gf, 6),
+    galois::GaloisFieldElement(&gf, 3),
     galois::GaloisFieldElement(&gf, 5),
     galois::GaloisFieldElement(&gf, 3),
     galois::GaloisFieldElement(&gf, 2),
-    galois::GaloisFieldElement(&gf, 5),
+    galois::GaloisFieldElement(&gf, 4),
   };
 
   // Transform the array of symbols into a polynomial
@@ -169,12 +169,15 @@ int main() {
   galois::GaloisFieldPolynomial error_poly_term;
   galois::GaloisFieldElement error_magnitude[connection_poly.deg()];
   for(int i = 0; i < root; i++) {
+    // Calculate the magnitude of the error
     error_magnitude[i] = (error_evaluator_poly(error_locator_roots[i])) / connection_deriv_poly(error_locator_roots[i]) ;
     std::cout << "Error magnitude value: " << error_magnitude[i] << "\n"; 
     error_poly_term = galois::GaloisFieldPolynomial(&gf, 0, initial_val);
     error_poly_term <<= gf.index(error_locator_roots[i].inverse());
     error_poly_term[gf.index(error_locator_roots[i].inverse())] *= error_magnitude[i];
 
+
+    // Generate the error polynomial
     if(i == 0) {
       error_poly = error_poly_term;
     } else {
@@ -184,6 +187,7 @@ int main() {
     std::cout << "Error polynomial term: " << error_poly_term << "\n";
   }
 
+  // Add the error polynomial to the message polynomial to get the original encoded message
   std::cout << "Error polynomial: " << error_poly << "\n";
   std::cout << "Decoded message: " << polynomial + error_poly << "\n"; 
   
