@@ -2,6 +2,7 @@
 #include <string>
 #include <sstream>
 #include <fstream>
+#include <vector>
 #include "GaloisFieldArithmetic/GaloisField.h"
 #include "GaloisFieldArithmetic/GaloisFieldElement.h"
 #include "GaloisFieldArithmetic/GaloisFieldPolynomial.h"
@@ -15,7 +16,11 @@ int main(){
   ifstream infile("input.txt");
   string temp;
   stringstream ss;
-  int num;
+  vector<vector<int>> num;
+  char c;
+  
+  // parses ints from strings
+  /*
   while (getline(infile, temp)) {
     ss << temp;
     while (ss >> temp) {
@@ -27,7 +32,14 @@ int main(){
     }
     ss.clear();
   }
+  */
 
+  for (int j = 0; getline(infile,temp); j++) {
+    for (int i = 0; i< temp.length(); i++) {
+      num[j][i] = temp.at(i) - '0';
+    }
+  }
+  
   infile.close();
   
   return 0;

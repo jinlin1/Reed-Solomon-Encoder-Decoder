@@ -38,7 +38,7 @@ int main() {
   // Shift the polynomial by the parity length 
   polynomial = polynomial << parity_length;
 
-  std::cout << polynomial;
+  std::cout << polynomial << std::endl;
 
   return 0;
 }
