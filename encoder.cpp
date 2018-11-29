@@ -8,9 +8,7 @@
 #include "GaloisFieldArithmetic/GaloisFieldPolynomial.h"
 using namespace std;
 
-int init(vector<int> prim, vector<int> gen, vector<int> msg) {
-
-  const unsigned int galois_field_exp = 3;
+int init(int galois_field_exp, vector<int> prim, vector<int> gen, vector<int> msg) {
   const unsigned int codeword_length = pow(2,galois_field_exp) - 1;
   const unsigned int data_length = msg.size();
   unsigned int parity_length = codeword_length - data_length;
@@ -80,7 +78,11 @@ int main() {
   ifstream infile("input.txt");
   string temp;
   vector<int> primpoly,genpoly,msg;
-
+  int galois_field_exp;
+  
+  if (getline(infile, temp)) {
+    galois_field_exp = temp.at(0) - '0';
+  } else { return -1; }
   if (getline(infile, temp)) {
     for (int i=0; i<temp.length(); i++) {
       primpoly.push_back(temp.at(i) - '0');
@@ -97,7 +99,7 @@ int main() {
     }
   } else { return -1; }
 
-  init(primpoly, genpoly, msg);  
+  init(galois_field_exp,primpoly, genpoly, msg);  
   
   return 0;
 }
