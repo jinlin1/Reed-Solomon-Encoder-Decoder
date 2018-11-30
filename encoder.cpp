@@ -8,7 +8,7 @@
 #include "GaloisFieldArithmetic/GaloisFieldPolynomial.h"
 using namespace std;
 
-int init(int galois_field_exp, vector<int> prim, vector<int> gen, vector<int> msg) {
+int encode(int galois_field_exp, vector<int> prim, vector<int> gen, vector<int> msg) {
   const unsigned int codeword_length = pow(2,galois_field_exp) - 1;
   const unsigned int data_length = msg.size();
   unsigned int parity_length = codeword_length - data_length;
@@ -69,6 +69,18 @@ int init(int galois_field_exp, vector<int> prim, vector<int> gen, vector<int> ms
   galois::GaloisFieldPolynomial message = msg_polynomial + parity_polynomial;
 
   cout << "Encoded messgae polynomial: " << message << "\n";
+
+  int i;
+  ofstream outfile("output.txt");
+  for (i=0; i<=message.deg(); i++) {
+    outfile << message[i];
+  }
+  if (i < codeword_length) {
+    for (; i < codeword_length; i++) {
+      outfile << "0";
+    }
+  }
+  outfile.close();
   
   return 0;
 }
@@ -99,8 +111,9 @@ int main() {
     }
   } else { return -1; }
 
-  init(galois_field_exp,primpoly, genpoly, msg);  
-  
+  encode(galois_field_exp,primpoly, genpoly, msg);  
+
+  infile.close();
   return 0;
 }
 
