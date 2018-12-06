@@ -45,6 +45,8 @@ int main() {
   const unsigned int data_length = 3;
   unsigned int parity_length = codeword_length - data_length;
 
+  unsigned int zero_syndrome_count = 0;
+
   // Primitive polynomial that acts on the individual symbols 
   // Important note: the far right number is the coefficient of the highest degree
   // while the far left is the coefficient of the lowest degree. 
@@ -58,13 +60,13 @@ int main() {
 
   // Create received message 
   galois::GaloisFieldElement gfe[codeword_length] = {
-    galois::GaloisFieldElement(&gf, 5),
-    galois::GaloisFieldElement(&gf, 2),
-    galois::GaloisFieldElement(&gf, 1),
+    galois::GaloisFieldElement(&gf, 6),
     galois::GaloisFieldElement(&gf, 4),
-    galois::GaloisFieldElement(&gf, 5),
-    galois::GaloisFieldElement(&gf, 3),
-    galois::GaloisFieldElement(&gf, 1),
+    galois::GaloisFieldElement(&gf, 2),
+    galois::GaloisFieldElement(&gf, 6),
+    galois::GaloisFieldElement(&gf, 2),
+    galois::GaloisFieldElement(&gf, 0),
+    galois::GaloisFieldElement(&gf, 0),
   };
 
   // Transform the array of symbols into a polynomial
@@ -87,6 +89,16 @@ int main() {
   for(int i = 0; i < parity_length; i++) {
     syndromes[i] = polynomial(generator_poly_alphas[i]); 
     std::cout << "Syndrome " << i << " :" << syndromes[i] << "\n";
+
+    if(syndromes[i] == 0) {
+      zero_syndrome_count++;
+    }
+  }
+
+  // Return the original message since no errors occured in message 
+  if(zero_syndrome_count == parity_length) {
+    std::cout << "Decoded message: " << polynomial << "\n"; 
+    return 0;
   }
 
   // Berlekamp Messay Algorithm implementation
