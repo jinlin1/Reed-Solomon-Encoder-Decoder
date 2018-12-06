@@ -65,8 +65,8 @@ int main() {
     galois::GaloisFieldElement(&gf, 2),
     galois::GaloisFieldElement(&gf, 6),
     galois::GaloisFieldElement(&gf, 2),
-    galois::GaloisFieldElement(&gf, 0),
-    galois::GaloisFieldElement(&gf, 0),
+    galois::GaloisFieldElement(&gf, 1),
+    galois::GaloisFieldElement(&gf, 1),
   };
 
   // Transform the array of symbols into a polynomial
@@ -163,6 +163,13 @@ int main() {
       std::cout << "Found a root : " << error_locator_roots[root] << "\n";
       root = root + 1;
     }
+  }
+
+  // When the number of roots are not distinct in the error locator polynomial,
+  // then it is considered a decoder failure.
+  if(root != connection_poly.deg()) {
+    std::cout << "Decoded message is too corrupted.\n"; 
+    return -1;
   }
 
   // Generate error evaluator polynomial / error magnitude polynomial
