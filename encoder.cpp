@@ -8,10 +8,13 @@
 #include "GaloisFieldArithmetic/GaloisFieldPolynomial.h"
 using namespace std;
 
-int encode(int galois_field_exp, vector<int> prim, vector<int> gen, vector<int> msg) {
+int encode(const unsigned int galois_field_exp,
+	   const vector<unsigned int> prim,
+	   const vector<unsigned int> gen,
+	   const vector<unsigned int> msg) {
   const unsigned int codeword_length = pow(2,galois_field_exp) - 1;
   const unsigned int data_length = msg.size();
-  unsigned int parity_length = codeword_length - data_length;
+  const unsigned int parity_length = gen.size();
 
   // Primitive polynomial that acts on the individual symbols 
   // Important note: the far right number is the coefficient of the highest degree
@@ -23,14 +26,13 @@ int encode(int galois_field_exp, vector<int> prim, vector<int> gen, vector<int> 
   for (int i=0; i < prim.size(); i++) {
     prim_poly[i] = prim.at(i);
   }
-
     
   // Define the galois field for the individual symbols
   galois::GaloisField gf(galois_field_exp, prim_poly);
 
   // Create individual symbols as an array of symbols
-  galois::GaloisFieldElement msg_gfe[msg.size()];
-  for (int i=0; i<msg.size();i++) {
+  galois::GaloisFieldElement msg_gfe[data_length];
+  for (int i=0; i<data_length;i++) {
     msg_gfe[i] = galois::GaloisFieldElement(&gf, msg.at(i));
   }
 
@@ -46,7 +48,7 @@ int encode(int galois_field_exp, vector<int> prim, vector<int> gen, vector<int> 
   vector<galois::GaloisFieldElement(*)> gen_gfe;
   vector<galois::GaloisFieldPolynomial> gen_polynomial;
 
-  for (int i=0; i < gen.size(); i++) {
+  for (int i=0; i < parity_length; i++) {
     galois::GaloisFieldElement gfei[2] = {galois::GaloisFieldElement(&gf, gen.at(i)),
 					  galois::GaloisFieldElement(&gf, 1)};
     gen_gfe.push_back(gfei);
@@ -71,7 +73,7 @@ int encode(int galois_field_exp, vector<int> prim, vector<int> gen, vector<int> 
   cout << "Encoded messgae polynomial: " << message << "\n";
 
   int i;
-  ofstream outfile("output.txt");
+  ofstream outfile("en_output.txt");
   for (i=0; i<=message.deg(); i++) {
     outfile << message[i];
   }
@@ -86,32 +88,38 @@ int encode(int galois_field_exp, vector<int> prim, vector<int> gen, vector<int> 
 }
 
 int main() {
-
-  ifstream infile("input.txt");
+  ifstream infile("en_input.txt");
   string temp;
-  vector<int> primpoly,genpoly,msg;
-  int galois_field_exp;
-  
+  vector<unsigned int> primpoly,genpoly,msg;
+  unsigned int gfe;
+
+  //galois field size
   if (getline(infile, temp)) {
-    galois_field_exp = temp.at(0) - '0';
+    gfe = temp.at(0) - '0';
   } else { return -1; }
+
+  //primitive polynomial
   if (getline(infile, temp)) {
     for (int i=0; i<temp.length(); i++) {
       primpoly.push_back(temp.at(i) - '0');
-    }    
+    }
   } else { return -1; }
+
+  //generator polynomial
   if (getline(infile, temp)) {
     for (int i=0; i<temp.length(); i++) {
       genpoly.push_back(temp.at(i) - '0');
     }
   } else { return -1; }
+
+  //the message
   if (getline(infile, temp)) {
     for (int i=0; i<temp.length(); i++) {
       msg.push_back(temp.at(i) - '0');
     }
   } else { return -1; }
 
-  encode(galois_field_exp,primpoly, genpoly, msg);  
+  encode(gfe, primpoly, genpoly, msg);  
 
   infile.close();
   return 0;
