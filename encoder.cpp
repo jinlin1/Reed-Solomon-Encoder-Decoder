@@ -70,7 +70,7 @@ int encode(const unsigned int galois_field_exp,
 
   galois::GaloisFieldPolynomial message = msg_polynomial + parity_polynomial;
 
-  cout << "Encoded messgae polynomial: " << message << "\n";
+  cout << "Encoded message polynomial: " << message << "\n";
 
   int i;
   ofstream outfile("en_output.txt");

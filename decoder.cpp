@@ -33,7 +33,9 @@ galois::GaloisFieldElement summation(
 
   // Perform the summation
   for(int i = 1; i <= len_lfsr; i++) {
-    discrepancy = discrepancy + (connection_poly[i] * syndromes[current_iteration-i]);
+    if(connection_poly.deg() >= i) {
+      discrepancy = discrepancy + (connection_poly[i] * syndromes[current_iteration-i]);
+    }
   }
 
   return discrepancy;
