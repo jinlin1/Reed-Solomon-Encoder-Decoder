@@ -6,6 +6,7 @@
 #include "GaloisFieldArithmetic/GaloisField.h"
 #include "GaloisFieldArithmetic/GaloisFieldElement.h"
 #include "GaloisFieldArithmetic/GaloisFieldPolynomial.h"
+#include "Parse.h"
 using namespace std;
 
 // Summation function to be used in Berlekamp Massey algorithm
@@ -230,40 +231,23 @@ int decode(const unsigned int galois_field_exp,
   return 0;
 }
 
-int main() {
-  ifstream infile("de_input.txt");
+int main(int argc, char** argv) {
+
+  if (argc == 1) cout << "No File Specified." << endl;
+  else if (argc < 2) cout << "Too Many Arguments Given." << endl;
+
   string temp;
   vector<unsigned int> msg, prim, gen;
   unsigned int gfe;
 
-  //galois field size
-  if (getline(infile, temp)) {
-    gfe = temp.at(0) - '0';
-  } else { return -1; }
-  
-  //primitive polynomial
-  if (getline(infile, temp)) {
-    for (int i=0; i<temp.length(); i++) {
-      prim.push_back(temp.at(i) - '0');
-    }
-  } else { return -1; }
+  Parse parse = Parse(argv[1]);
 
-  //generator polynomial
-  if (getline(infile, temp)) {
-    for (int i=0; i<temp.length(); i++) {
-      gen.push_back(temp.at(i) - '0');
-    }
-  } else { return -1; }
-
-  //encoded message
-  if (getline(infile, temp)) {
-    for (int i=0; i<temp.length(); i++) {
-      msg.push_back(temp.at(i) - '0');
-    }
-  } else { return -1; }
+  gfe = parse.getGfe();
+  prim = parse.getPrimpoly();
+  gen = parse.getGenpoly();
+  msg = parse.getMsg();
   
   decode(gfe,prim,gen,msg);
 
-  infile.close();
   return 0;
 }

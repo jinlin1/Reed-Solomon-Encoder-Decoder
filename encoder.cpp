@@ -6,6 +6,7 @@
 #include "GaloisFieldArithmetic/GaloisField.h"
 #include "GaloisFieldArithmetic/GaloisFieldElement.h"
 #include "GaloisFieldArithmetic/GaloisFieldPolynomial.h"
+#include "Parse.h"
 using namespace std;
 
 int encode(const unsigned int galois_field_exp,
@@ -87,40 +88,22 @@ int encode(const unsigned int galois_field_exp,
   return 0;
 }
 
-int main() {
-  ifstream infile("en_input.txt");
+int main(int argc, char** argv) {
+
+  if (argc == 1) cout << "No File Specified." << endl;
+  else if (argc < 2) cout << "Too Many Arguments Given." << endl;
+
   string temp;
   vector<unsigned int> primpoly,genpoly,msg;
   unsigned int gfe;
 
-  //galois field size
-  if (getline(infile, temp)) {
-    gfe = temp.at(0) - '0';
-  } else { return -1; }
-
-  //primitive polynomial
-  if (getline(infile, temp)) {
-    for (int i=0; i<temp.length(); i++) {
-      primpoly.push_back(temp.at(i) - '0');
-    }
-  } else { return -1; }
-
-  //generator polynomial
-  if (getline(infile, temp)) {
-    for (int i=0; i<temp.length(); i++) {
-      genpoly.push_back(temp.at(i) - '0');
-    }
-  } else { return -1; }
-
-  //the message
-  if (getline(infile, temp)) {
-    for (int i=0; i<temp.length(); i++) {
-      msg.push_back(temp.at(i) - '0');
-    }
-  } else { return -1; }
+  Parse parse = Parse(argv[1]);
+  gfe = parse.getGfe();
+  primpoly = parse.getPrimpoly();
+  genpoly = parse.getGenpoly();
+  msg = parse.getMsg();
 
   encode(gfe, primpoly, genpoly, msg);  
 
-  infile.close();
   return 0;
 }
