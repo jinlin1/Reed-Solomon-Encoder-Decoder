@@ -7,6 +7,7 @@
 #include "GaloisFieldArithmetic/GaloisFieldElement.h"
 #include "GaloisFieldArithmetic/GaloisFieldPolynomial.h"
 #include "Parse.h"
+#include "Package.h"
 using namespace std;
 
 // Summation function to be used in Berlekamp Massey algorithm
@@ -101,19 +102,11 @@ int decode(const unsigned int galois_field_exp,
 
   // Return the original message since no errors occured in message 
   if(zero_syndrome_count == parity_length) {
+
     msg_polynomial = msg_polynomial >> parity_length;
-    cout << "Decoded message: " << msg_polynomial << "\n";
-    int i;
-    ofstream outfile("de_output.txt");
-    for (i=0; i<=msg_polynomial.deg(); i++) {
-      outfile << msg_polynomial[i];
-    }
-    if (i < data_length) {
-      for (; i < data_length; i++) {
-	outfile << "0";
-      }
-    }
-    outfile.close();
+
+    Package package = Package(msg_polynomial, data_length, "de_output.txt");
+
     return 0;
   }
 
@@ -227,6 +220,8 @@ int decode(const unsigned int galois_field_exp,
   cout << "Error polynomial: " << error_poly << "\n";
   msg_polynomial = (msg_polynomial + error_poly) >> parity_length;
   cout << "Decoded message: " << msg_polynomial << "\n"; 
+
+  Package package = Package(msg_polynomial, data_length, "de_output.txt");
   
   return 0;
 }
