@@ -1,3 +1,7 @@
+/**
+ * Parse loads different polynomials from a file 
+**/
+
 #ifndef INCLUDE_PARSE_H
 #define INCLUDE_PARSE_H
 
