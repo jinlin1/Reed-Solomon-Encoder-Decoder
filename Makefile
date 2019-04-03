@@ -1,5 +1,8 @@
 GALOIS_DIR=GaloisFieldArithmetic
 
+gui: 
+	g++ main.cpp -o main `pkg-config gtkmm-3.0 --cflags --libs`
+
 encoder: encoder.o  $(GALOIS_DIR)/GaloisField.o $(GALOIS_DIR)/GaloisFieldElement.o $(GALOIS_DIR)/GaloisFieldPolynomial.o Parse.o Package.o
 	g++ -o encoder.out encoder.o $(GALOIS_DIR)/GaloisField.o $(GALOIS_DIR)/GaloisFieldElement.o $(GALOIS_DIR)/GaloisFieldPolynomial.o Parse.o Package.o
 
