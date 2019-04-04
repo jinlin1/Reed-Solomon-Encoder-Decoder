@@ -66,7 +66,7 @@
           </packing>
         </child>
         <child>
-          <object class="GtkButton">
+          <object class="GtkButton" id="encode">
             <property name="label" translatable="yes">Encode</property>
             <property name="width_request">100</property>
             <property name="height_request">30</property>
@@ -80,7 +80,7 @@
           </packing>
         </child>
         <child>
-          <object class="GtkButton">
+          <object class="GtkButton" id="decode">
             <property name="label" translatable="yes">Decode</property>
             <property name="width_request">100</property>
             <property name="height_request">30</property>
@@ -91,68 +91,6 @@
           <packing>
             <property name="x">250</property>
             <property name="y">375</property>
-          </packing>
-        </child>
-        <child>
-          <object class="GtkEntry" id="msg">
-            <property name="width_request">300</property>
-            <property name="height_request">75</property>
-            <property name="visible">True</property>
-            <property name="can_focus">True</property>
-          </object>
-          <packing>
-            <property name="x">50</property>
-            <property name="y">275</property>
-          </packing>
-        </child>
-        <child>
-          <object class="GtkComboBoxText" id="Prim Poly">
-            <property name="width_request">300</property>
-            <property name="height_request">25</property>
-            <property name="visible">True</property>
-            <property name="can_focus">False</property>
-            <property name="has_entry">True</property>
-            <property name="active_id">pp1</property>
-            <items>
-              <item id="pp1" translatable="yes">1</item>
-              <item id="pp2" translatable="yes">2</item>
-              <item id="pp3" translatable="yes">3</item>
-            </items>
-            <child internal-child="entry">
-              <object class="GtkEntry">
-                <property name="can_focus">False</property>
-                <property name="text" translatable="yes">1</property>
-              </object>
-            </child>
-          </object>
-          <packing>
-            <property name="x">50</property>
-            <property name="y">125</property>
-          </packing>
-        </child>
-        <child>
-          <object class="GtkComboBoxText" id="Gen Poly">
-            <property name="width_request">300</property>
-            <property name="height_request">25</property>
-            <property name="visible">True</property>
-            <property name="can_focus">False</property>
-            <property name="has_entry">True</property>
-            <property name="active_id">gp1</property>
-            <items>
-              <item id="gp1" translatable="yes">1</item>
-              <item id="gp2" translatable="yes">2</item>
-              <item id="gp3" translatable="yes">3</item>
-            </items>
-            <child internal-child="entry">
-              <object class="GtkEntry">
-                <property name="can_focus">False</property>
-                <property name="text" translatable="yes">1</property>
-              </object>
-            </child>
-          </object>
-          <packing>
-            <property name="x">50</property>
-            <property name="y">200</property>
           </packing>
         </child>
         <child>
@@ -171,6 +109,72 @@
           <packing>
             <property name="x">50</property>
             <property name="y">50</property>
+          </packing>
+        </child>
+        <child>
+          <object class="GtkComboBoxText" id="Prim Poly">
+            <property name="width_request">300</property>
+            <property name="height_request">25</property>
+            <property name="visible">True</property>
+            <property name="can_focus">False</property>
+            <property name="active_id">pp1</property>
+            <items>
+              <item id="pp1" translatable="yes">x³+x²+1</item>
+              <item id="pp2" translatable="yes">gf4 pp</item>
+              <item id="pp3" translatable="yes">gf8 pp</item>
+            </items>
+          </object>
+          <packing>
+            <property name="x">50</property>
+            <property name="y">125</property>
+          </packing>
+        </child>
+        <child>
+          <object class="GtkComboBoxText" id="Gen Poly">
+            <property name="width_request">300</property>
+            <property name="height_request">25</property>
+            <property name="visible">True</property>
+            <property name="can_focus">False</property>
+            <property name="tooltip_markup" translatable="yes"> TEXT&lt;sup&gt;WHAT YOU WANT SMALLER&lt;/sup&gt;</property>
+            <property name="active_id">gp1</property>
+            <items>
+              <item id="gp1" translatable="yes">x⁴+3x³+1x²+2x+3</item>
+              <item id="gp2" translatable="yes">2</item>
+              <item id="gp3" translatable="yes">3</item>
+            </items>
+          </object>
+          <packing>
+            <property name="x">50</property>
+            <property name="y">200</property>
+          </packing>
+        </child>
+        <child>
+          <object class="GtkScrolledWindow">
+            <property name="width_request">300</property>
+            <property name="height_request">75</property>
+            <property name="visible">True</property>
+            <property name="can_focus">True</property>
+            <property name="shadow_type">in</property>
+            <child>
+              <object class="GtkViewport">
+                <property name="visible">True</property>
+                <property name="can_focus">False</property>
+                <child>
+                  <object class="GtkTextView" id="msg">
+                    <property name="width_request">-1</property>
+                    <property name="visible">True</property>
+                    <property name="can_focus">True</property>
+                    <property name="wrap_mode">word-char</property>
+                    <property name="right_margin">5</property>
+                    <property name="monospace">True</property>
+                  </object>
+                </child>
+              </object>
+            </child>
+          </object>
+          <packing>
+            <property name="x">50</property>
+            <property name="y">275</property>
           </packing>
         </child>
       </object>
