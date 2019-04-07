@@ -6,20 +6,26 @@
 using namespace std;
 Package::Package( 
     galois::GaloisFieldPolynomial outputPoly,
-    unsigned int length,
-    string filename) {
+    unsigned int length) {
+
+  std::stringstream outputStr;
+
   int i;
-  ofstream outfile(filename);
   for (i=0; i<=outputPoly.deg(); i++) {
-    outfile << outputPoly[i];
-    if (i < length-1) outfile << ",";
+    outputStr << outputPoly[i];
+    if (i < length-1) outputStr << ",";
   }
   if (i < length) {
     for (; i < length; i++) {
-      outfile << "0";
-      if (i < length-1) outfile << ",";
+      outputStr << "0";
+      if (i < length-1) outputStr << ",";
     }
   }
-  outfile.close();
 
+  outPolyStr = outputStr.str();
+
+}
+
+string Package::getOutPolyStr() {
+  return outPolyStr;
 }

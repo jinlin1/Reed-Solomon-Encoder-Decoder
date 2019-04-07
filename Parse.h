@@ -1,17 +1,16 @@
 /**
  * Parse loads different polynomials from a file 
 **/
-
 #ifndef INCLUDE_PARSE_H
 #define INCLUDE_PARSE_H
 
-#include <vector>
 #include <string>
+#include <vector>
 using namespace std;
 
 class Parse {
   public:
-    Parse(string filename);
+    Parse(string gfe, string primpoly, string genpoly, string msg);
 
     unsigned int getGfe();
     vector<unsigned int> getPrimpoly();

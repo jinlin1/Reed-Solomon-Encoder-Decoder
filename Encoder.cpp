@@ -1,16 +1,31 @@
+#include "Encoder.h"
 #include <iostream>
 #include <fstream>
-#include <string>
 #include <sstream>
 #include <math.h>
 #include "GaloisFieldArithmetic/GaloisField.h"
 #include "GaloisFieldArithmetic/GaloisFieldElement.h"
 #include "GaloisFieldArithmetic/GaloisFieldPolynomial.h"
 #include "Parse.h"
-#include "Package.h"
-using namespace std;
 
-int encode(const unsigned int galois_field_exp,
+Package Encoder::setup(const std::string& gfeStr, 
+    const std::string& primpolyStr, 
+    const std::string& genpolyStr, 
+    const std::string& msgStr) {
+
+  vector<unsigned int> primpoly,genpoly,msg;
+  unsigned int gfe;
+
+  Parse parse = Parse(gfeStr, primpolyStr, genpolyStr, msgStr);
+  gfe = parse.getGfe();
+  primpoly = parse.getPrimpoly();
+  genpoly = parse.getGenpoly();
+  msg = parse.getMsg();
+
+  return encode(gfe, primpoly, genpoly, msg);  
+}
+
+Package Encoder::encode(const unsigned int galois_field_exp,
 	   const vector<unsigned int> prim,
 	   const vector<unsigned int> gen,
 	   const vector<unsigned int> msg) {
@@ -74,27 +89,7 @@ int encode(const unsigned int galois_field_exp,
 
   cout << "Encoded message polynomial: " << message << "\n";
 
-  Package package = Package(message, codeword_length, "en_output.txt");
+  Package package = Package(message, codeword_length);
   
-  return 0;
-}
-
-int main(int argc, char** argv) {
-
-  if (argc == 1) cout << "No File Specified." << endl;
-  else if (argc < 2) cout << "Too Many Arguments Given." << endl;
-
-  string temp;
-  vector<unsigned int> primpoly,genpoly,msg;
-  unsigned int gfe;
-
-  Parse parse = Parse(argv[1]);
-  gfe = parse.getGfe();
-  primpoly = parse.getPrimpoly();
-  genpoly = parse.getGenpoly();
-  msg = parse.getMsg();
-
-  encode(gfe, primpoly, genpoly, msg);  
-
-  return 0;
+  return package;
 }

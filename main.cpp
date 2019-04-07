@@ -1,18 +1,26 @@
 #include <gtkmm.h>
 #include <iostream>
+#include "Package.h"
+#include "Encoder.h"
 
 void encode_button_clicked(Glib::RefPtr<Gtk::Builder> builder)
 {
-  Gtk::ComboBoxText* gf;
-  Gtk::ComboBoxText* prim_poly;
-  Gtk::TextView* msg;
-  builder->get_widget("GF Size", gf);
-  builder->get_widget("Prim Poly", prim_poly);
-  builder->get_widget("msg", msg);
+  Gtk::ComboBoxText* gf_widget;
+  Gtk::ComboBoxText* prim_poly_widget;
+  Gtk::ComboBoxText* gen_poly_widget;
+  Gtk::TextView* msg_widget;
+  builder->get_widget("GF Size", gf_widget);
+  builder->get_widget("Prim Poly", prim_poly_widget);
+  builder->get_widget("Gen Poly", gen_poly_widget);
+  builder->get_widget("msg", msg_widget);
 
-  std::cout << gf->get_active_text() << "\n";
-  std::cout << prim_poly->get_active_id() << "\n";
-  std::cout << msg->get_buffer()->get_text() << "\n";
+  string gfStr = gf_widget->get_active_text();
+  string primpolyStr = prim_poly_widget->get_active_id() ;
+  string genpolyStr = gen_poly_widget->get_active_id();
+  string msgStr = msg_widget->get_buffer()->get_text();
+
+  Encoder encoder = Encoder();
+  Package package = encoder.setup(gfStr, primpolyStr, genpolyStr, msgStr);
 
 }
 

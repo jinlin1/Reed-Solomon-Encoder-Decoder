@@ -1,10 +1,10 @@
 GALOIS_DIR=GaloisFieldArithmetic
 
-gui: 
-	g++ main.cpp -o main `pkg-config gtkmm-3.0 --cflags --libs`
+main: main.o Encoder.o Parse.o Package.o $(GALOIS_DIR)/GaloisField.o $(GALOIS_DIR)/GaloisFieldElement.o $(GALOIS_DIR)/GaloisFieldPolynomial.o 
+	g++ -o main main.o Encoder.o Parse.o Package.o $(GALOIS_DIR)/GaloisField.o $(GALOIS_DIR)/GaloisFieldElement.o $(GALOIS_DIR)/GaloisFieldPolynomial.o `pkg-config gtkmm-3.0 --cflags --libs`
 
-encoder: encoder.o  $(GALOIS_DIR)/GaloisField.o $(GALOIS_DIR)/GaloisFieldElement.o $(GALOIS_DIR)/GaloisFieldPolynomial.o Parse.o Package.o
-	g++ -o encoder.out encoder.o $(GALOIS_DIR)/GaloisField.o $(GALOIS_DIR)/GaloisFieldElement.o $(GALOIS_DIR)/GaloisFieldPolynomial.o Parse.o Package.o
+main.o: main.cpp
+	g++ -c main.cpp `pkg-config gtkmm-3.0 --cflags --libs` 
 
 decoder: decoder.o  $(GALOIS_DIR)/GaloisField.o $(GALOIS_DIR)/GaloisFieldElement.o $(GALOIS_DIR)/GaloisFieldPolynomial.o Parse.o Package.o
 	g++ -o decoder.out decoder.o $(GALOIS_DIR)/GaloisField.o $(GALOIS_DIR)/GaloisFieldElement.o $(GALOIS_DIR)/GaloisFieldPolynomial.o Parse.o Package.o
@@ -27,8 +27,8 @@ Package.o: Package.cpp
 Parse.o: Parse.cpp
 	g++ -c Parse.cpp
 
-encoder.o: encoder.cpp
-	g++ -c encoder.cpp
+Encoder.o: Encoder.cpp
+	g++ -c Encoder.cpp 
 
 decoder.o: decoder.cpp
 	g++ -c decoder.cpp

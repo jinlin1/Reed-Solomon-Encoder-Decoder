@@ -4,31 +4,22 @@
 #include <sstream>
 using namespace std;
 
-Parse::Parse(string filename)
+Parse::Parse(
+    string gfe, string primpoly, string genpoly, string msg)
 {
-  ifstream infile(filename);
-  string temp;
-
   //galois field size
-  if (getline(infile, temp)) gfe = temp.at(0) - '0';
+  this->gfe = gfe.at(0) - '0';
 
   //primitive polynomial
-  if (getline(infile, temp)) {
-    for (int i=0; i<temp.length(); i++) {
-      primpoly.push_back(temp.at(i) - '0');
-    }
+  for (int i=0; i<primpoly.length(); i++) {
+      this->primpoly.push_back(primpoly.at(i) - '0');
   }
 
   //generator polynomial
-  getline(infile,temp);
-  genpoly = parseDelim(temp);
+  this->genpoly = parseDelim(genpoly);
 
   //message
-  getline(infile,temp);
-  msg = parseDelim(temp);
-
-  infile.close();
-
+  this->msg = parseDelim(msg);
 }
 
 unsigned int Parse::getGfe() {
