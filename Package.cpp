@@ -8,7 +8,7 @@ using namespace std;
 Package::Package( 
     string errorMessage) {
 
-  this.errorMessage = errorMessage; 
+  this->errorMessage = errorMessage; 
 
   isSuccess = false;
 
