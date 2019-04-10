@@ -137,8 +137,8 @@ Package Decoder::decode(const unsigned int galois_field_exp,
   // When the number of roots are not distinct in the error locator polynomial,
   // then it is considered a decoder failure.
   if(root != connection_poly.deg()) {
-    cout << "Decoded message is too corrupted.\n"; 
-    return Package("Decoded message is too corrupted.\n");
+    cout << "Decoded message is too corrupt.\n"; 
+    return Package("Decoded message is too corrupt.\n");
   }
 
   // Generate error evaluator polynomial / error magnitude polynomial

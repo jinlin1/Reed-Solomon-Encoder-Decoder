@@ -39,12 +39,16 @@ void encode_button_clicked(Glib::RefPtr<Gtk::Builder> builder)
 
 void decode_button_clicked(Glib::RefPtr<Gtk::Builder> builder)
 {
+  Gtk::Window* error_window;
+  Gtk::Label* error_msg_widget;
   Gtk::ComboBoxText* gf_widget;
   Gtk::ComboBoxText* prim_poly_widget;
   Gtk::ComboBoxText* gen_poly_widget;
   Gtk::TextView* msg_widget;
   Gtk::TextView* output_widget;
   Gtk::TextBuffer* output_buffer;
+  builder->get_widget("errwin", error_window);
+  builder->get_widget("errmsg", error_msg_widget);
   builder->get_widget("GF Size", gf_widget);
   builder->get_widget("Prim Poly", prim_poly_widget);
   builder->get_widget("Gen Poly", gen_poly_widget);
@@ -63,9 +67,14 @@ void decode_button_clicked(Glib::RefPtr<Gtk::Builder> builder)
       parse.getGfe(), 
       parse.getPrimpoly(), 
       parse.getGenpoly(), 
-      parse.getMsg()); 
+      parse.getMsg());
 
-  output_widget->get_buffer()->set_text(package.getOutPolyStr());
+  if(package.getSuccess()) {
+    output_widget->get_buffer()->set_text(package.getOutPolyStr());
+  } else {
+    error_msg_widget->set_text(package.getErrorMessage());
+    error_window->show();
+  }
 
 }
 
@@ -80,19 +89,19 @@ int main(int argc, char *argv[])
       "org.gtkmm.examples.base");
 
   Gtk::Window* window;
-  Gtk::Window* errWindow;
+  Gtk::Window* errorWindow;
   Gtk::Button* encodeButton;
   Gtk::Button* decodeButton;
   Gtk::Button* errorButton;
   Glib::RefPtr<Gtk::Builder> builder = Gtk::Builder::create_from_file("ui1.glade");
   builder->get_widget("mainwin", window);
-  builder->get_widget("errwin", errWindow);
+  builder->get_widget("errwin", errorWindow);
   builder->get_widget("encode", encodeButton);
   builder->get_widget("decode", decodeButton);
   builder->get_widget("errbutton", errorButton);
   encodeButton->signal_clicked().connect(sigc::bind<Glib::RefPtr<Gtk::Builder>>(sigc::ptr_fun(&encode_button_clicked), builder));
   decodeButton->signal_clicked().connect(sigc::bind<Glib::RefPtr<Gtk::Builder>>(sigc::ptr_fun(&decode_button_clicked), builder));
-  errorButton->signal_clicked().connect(sigc::bind<Gtk::Window*>(sigc::ptr_fun(&close_window), errWindow));
+  errorButton->signal_clicked().connect(sigc::bind<Gtk::Window*>(sigc::ptr_fun(&close_window), errorWindow));
 
   return app->run(*window);
 }

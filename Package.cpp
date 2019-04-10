@@ -39,5 +39,14 @@ Package::Package(
 }
 
 string Package::getOutPolyStr() {
-  return outPolyStr;
+  return this->outPolyStr;
 }
+
+string Package::getErrorMessage() {
+  return this->errorMessage;
+}
+
+bool Package::getSuccess() {
+  return this->isSuccess;
+}
+

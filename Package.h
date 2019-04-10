@@ -17,7 +17,7 @@ class Package {
         unsigned int length);
     string getOutPolyStr();
     string getErrorMessage();
-    string getSuccess();
+    bool getSuccess();
 
   private:
     string outPolyStr;
