@@ -11,13 +11,18 @@ using namespace std;
 
 class Package {
   public:
+    Package(string errorMessage);
     Package(
         galois::GaloisFieldPolynomial outputPoly,
         unsigned int length);
     string getOutPolyStr();
+    string getErrorMessage();
+    string getSuccess();
 
   private:
     string outPolyStr;
+    string errorMessage;
+    bool isSuccess;
 
 };
 

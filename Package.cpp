@@ -4,6 +4,16 @@
 #include <sstream>
 
 using namespace std;
+
+Package::Package( 
+    string errorMessage) {
+
+  this.errorMessage = errorMessage; 
+
+  isSuccess = false;
+
+}
+
 Package::Package( 
     galois::GaloisFieldPolynomial outputPoly,
     unsigned int length) {
@@ -23,6 +33,8 @@ Package::Package(
   }
 
   outPolyStr = outputStr.str();
+
+  isSuccess = true;
 
 }
 
