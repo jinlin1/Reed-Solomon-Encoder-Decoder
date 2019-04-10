@@ -1,15 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Generated with glade 3.20.0 -->
+<!-- Generated with glade 3.22.1 -->
 <interface>
   <requires lib="gtk+" version="3.20"/>
   <object class="GtkWindow" id="mainwin">
-    <property name="width_request">750</property>
-    <property name="height_request">430</property>
+    <property name="width_request">640</property>
+    <property name="height_request">365</property>
     <property name="can_focus">False</property>
     <child>
+      <placeholder/>
+    </child>
+    <child>
       <object class="GtkFixed" id="gridwin">
-        <property name="width_request">750</property>
-        <property name="height_request">430</property>
         <property name="visible">True</property>
         <property name="can_focus">False</property>
         <child>
@@ -20,34 +21,32 @@
             <property name="label" translatable="yes">GF Size	</property>
           </object>
           <packing>
-            <property name="x">50</property>
-            <property name="y">25</property>
+            <property name="x">10</property>
+            <property name="y">5</property>
           </packing>
         </child>
         <child>
           <object class="GtkLabel">
-            <property name="width_request">147</property>
             <property name="height_request">18</property>
             <property name="visible">True</property>
             <property name="can_focus">False</property>
             <property name="label" translatable="yes">Primitive Polynomial</property>
           </object>
           <packing>
-            <property name="x">50</property>
-            <property name="y">100</property>
+            <property name="x">10</property>
+            <property name="y">70</property>
           </packing>
         </child>
         <child>
           <object class="GtkLabel">
-            <property name="width_request">156</property>
             <property name="height_request">20</property>
             <property name="visible">True</property>
             <property name="can_focus">False</property>
             <property name="label" translatable="yes">Generator Polynomial</property>
           </object>
           <packing>
-            <property name="x">50</property>
-            <property name="y">175</property>
+            <property name="x">10</property>
+            <property name="y">135</property>
           </packing>
         </child>
         <child>
@@ -58,8 +57,8 @@
             <property name="label" translatable="yes">Message</property>
           </object>
           <packing>
-            <property name="x">50</property>
-            <property name="y">250</property>
+            <property name="x">10</property>
+            <property name="y">210</property>
           </packing>
         </child>
         <child>
@@ -72,8 +71,8 @@
             <property name="receives_default">True</property>
           </object>
           <packing>
-            <property name="x">50</property>
-            <property name="y">375</property>
+            <property name="x">10</property>
+            <property name="y">325</property>
           </packing>
         </child>
         <child>
@@ -86,8 +85,8 @@
             <property name="receives_default">True</property>
           </object>
           <packing>
-            <property name="x">250</property>
-            <property name="y">375</property>
+            <property name="x">210</property>
+            <property name="y">325</property>
           </packing>
         </child>
         <child>
@@ -104,8 +103,8 @@
             </items>
           </object>
           <packing>
-            <property name="x">50</property>
-            <property name="y">50</property>
+            <property name="x">10</property>
+            <property name="y">30</property>
           </packing>
         </child>
         <child>
@@ -122,8 +121,8 @@
             </items>
           </object>
           <packing>
-            <property name="x">50</property>
-            <property name="y">125</property>
+            <property name="x">10</property>
+            <property name="y">95</property>
           </packing>
         </child>
         <child>
@@ -140,8 +139,8 @@
             </items>
           </object>
           <packing>
-            <property name="x">50</property>
-            <property name="y">200</property>
+            <property name="x">10</property>
+            <property name="y">160</property>
           </packing>
         </child>
         <child>
@@ -169,14 +168,14 @@
             </child>
           </object>
           <packing>
-            <property name="x">50</property>
-            <property name="y">275</property>
+            <property name="x">10</property>
+            <property name="y">235</property>
           </packing>
         </child>
         <child>
           <object class="GtkScrolledWindow">
             <property name="width_request">300</property>
-            <property name="height_request">355</property>
+            <property name="height_request">325</property>
             <property name="visible">True</property>
             <property name="can_focus">True</property>
             <property name="shadow_type">in</property>
@@ -185,7 +184,7 @@
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
                 <child>
-                  <object class="GtkTextView">
+                  <object class="GtkTextView" id="output">
                     <property name="width_request">-1</property>
                     <property name="visible">True</property>
                     <property name="can_focus">True</property>
@@ -197,21 +196,20 @@
             </child>
           </object>
           <packing>
-            <property name="x">400</property>
-            <property name="y">50</property>
+            <property name="x">330</property>
+            <property name="y">30</property>
           </packing>
         </child>
         <child>
           <object class="GtkLabel" id="Output">
-            <property name="width_request">-1</property>
             <property name="height_request">18</property>
             <property name="visible">True</property>
             <property name="can_focus">False</property>
             <property name="label" translatable="yes">Output</property>
           </object>
           <packing>
-            <property name="x">400</property>
-            <property name="y">25</property>
+            <property name="x">330</property>
+            <property name="y">5</property>
           </packing>
         </child>
       </object>
