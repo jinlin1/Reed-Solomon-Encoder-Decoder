@@ -69,6 +69,10 @@ void decode_button_clicked(Glib::RefPtr<Gtk::Builder> builder)
 
 }
 
+void close_window(Gtk::Window* window) {
+  window->hide();
+}
+
 int main(int argc, char *argv[])
 {
   auto app =
@@ -76,14 +80,19 @@ int main(int argc, char *argv[])
       "org.gtkmm.examples.base");
 
   Gtk::Window* window;
+  Gtk::Window* errWindow;
   Gtk::Button* encodeButton;
   Gtk::Button* decodeButton;
+  Gtk::Button* errorButton;
   Glib::RefPtr<Gtk::Builder> builder = Gtk::Builder::create_from_file("ui1.glade");
   builder->get_widget("mainwin", window);
+  builder->get_widget("errwin", errWindow);
   builder->get_widget("encode", encodeButton);
   builder->get_widget("decode", decodeButton);
+  builder->get_widget("errbutton", errorButton);
   encodeButton->signal_clicked().connect(sigc::bind<Glib::RefPtr<Gtk::Builder>>(sigc::ptr_fun(&encode_button_clicked), builder));
   decodeButton->signal_clicked().connect(sigc::bind<Glib::RefPtr<Gtk::Builder>>(sigc::ptr_fun(&decode_button_clicked), builder));
+  errorButton->signal_clicked().connect(sigc::bind<Gtk::Window*>(sigc::ptr_fun(&close_window), errWindow));
 
   return app->run(*window);
 }
