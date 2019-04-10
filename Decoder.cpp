@@ -1,50 +1,10 @@
+#include "Decoder.h"
 #include <iostream>
 #include <fstream>
-#include <string>
 #include <sstream>
 #include <math.h> 
-#include "GaloisFieldArithmetic/GaloisField.h"
-#include "GaloisFieldArithmetic/GaloisFieldElement.h"
-#include "GaloisFieldArithmetic/GaloisFieldPolynomial.h"
-#include "Parse.h"
-#include "Package.h"
-using namespace std;
 
-// Summation function to be used in Berlekamp Massey algorithm
-// Take the summation of the 
-// kth connection poly element multipled by the kth - ith sequence value
-//
-// @param  gf The Galois Field that is used for all elements
-// @param  connection_poly Current connection polynomial
-// @param  syndromes Array of the syndromes
-// @param  current_iteration Current iteration of the Berlekamp Massey algorithm
-galois::GaloisFieldElement summation(
-    galois::GaloisField* gf,
-    galois::GaloisFieldPolynomial connection_poly, 
-    galois::GaloisFieldElement* syndromes,
-    unsigned int current_iteration,
-    unsigned int len_lfsr) {
-
-  // Initialize the discrepancy to be the syndrome at k
-  galois::GaloisFieldElement discrepancy = syndromes[current_iteration];
-
-  // Return discrepancy if length of lfsr is less than 1
-  if(len_lfsr < 1) {
-    return discrepancy;
-  }
-
-  // Perform the summation
-  for(int i = 1; i <= len_lfsr; i++) {
-    if(connection_poly.deg() >= i) {
-      discrepancy = discrepancy + (connection_poly[i] * syndromes[current_iteration-i]);
-    }
-  }
-
-  return discrepancy;
-}
-
-
-int decode(const unsigned int galois_field_exp,
+Package Decoder::decode(const unsigned int galois_field_exp,
 	   const vector<unsigned int> prim,
 	   const vector<unsigned int> gen,
 	   const vector<unsigned int> msg) {
@@ -105,9 +65,9 @@ int decode(const unsigned int galois_field_exp,
 
     msg_polynomial = msg_polynomial >> parity_length;
 
-    Package package = Package(msg_polynomial, data_length, "de_output.txt");
+    Package package = Package(msg_polynomial, data_length);
 
-    return 0;
+    return package;
   }
 
   // Berlekamp Messay Algorithm implementation
@@ -178,7 +138,7 @@ int decode(const unsigned int galois_field_exp,
   // then it is considered a decoder failure.
   if(root != connection_poly.deg()) {
     cout << "Decoded message is too corrupted.\n"; 
-    return -1;
+    return Package("Decoded message is too corrupted.\n");
   }
 
   // Generate error evaluator polynomial / error magnitude polynomial
@@ -221,28 +181,41 @@ int decode(const unsigned int galois_field_exp,
   msg_polynomial = (msg_polynomial + error_poly) >> parity_length;
   cout << "Decoded message: " << msg_polynomial << "\n"; 
 
-  Package package = Package(msg_polynomial, data_length, "de_output.txt");
+  Package package = Package(msg_polynomial, data_length);
   
-  return 0;
+  return package;
 }
 
-int main(int argc, char** argv) {
+// Summation function to be used in Berlekamp Massey algorithm
+// Take the summation of the 
+// kth connection poly element multipled by the kth - ith sequence value
+//
+// @param  gf The Galois Field that is used for all elements
+// @param  connection_poly Current connection polynomial
+// @param  syndromes Array of the syndromes
+// @param  current_iteration Current iteration of the Berlekamp Massey algorithm
+galois::GaloisFieldElement Decoder::summation(
+    galois::GaloisField* gf,
+    galois::GaloisFieldPolynomial connection_poly, 
+    galois::GaloisFieldElement* syndromes,
+    unsigned int current_iteration,
+    unsigned int len_lfsr) {
 
-  if (argc == 1) cout << "No File Specified." << endl;
-  else if (argc < 2) cout << "Too Many Arguments Given." << endl;
+  // Initialize the discrepancy to be the syndrome at k
+  galois::GaloisFieldElement discrepancy = syndromes[current_iteration];
 
-  string temp;
-  vector<unsigned int> msg, prim, gen;
-  unsigned int gfe;
+  // Return discrepancy if length of lfsr is less than 1
+  if(len_lfsr < 1) {
+    return discrepancy;
+  }
 
-  Parse parse = Parse(argv[1]);
+  // Perform the summation
+  for(int i = 1; i <= len_lfsr; i++) {
+    if(connection_poly.deg() >= i) {
+      discrepancy = discrepancy + (connection_poly[i] * syndromes[current_iteration-i]);
+    }
+  }
 
-  gfe = parse.getGfe();
-  prim = parse.getPrimpoly();
-  gen = parse.getGenpoly();
-  msg = parse.getMsg();
-  
-  decode(gfe,prim,gen,msg);
-
-  return 0;
+  return discrepancy;
 }
+

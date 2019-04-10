@@ -6,24 +6,6 @@
 #include "GaloisFieldArithmetic/GaloisField.h"
 #include "GaloisFieldArithmetic/GaloisFieldElement.h"
 #include "GaloisFieldArithmetic/GaloisFieldPolynomial.h"
-#include "Parse.h"
-
-Package Encoder::setup(const std::string& gfeStr, 
-    const std::string& primpolyStr, 
-    const std::string& genpolyStr, 
-    const std::string& msgStr) {
-
-  vector<unsigned int> primpoly,genpoly,msg;
-  unsigned int gfe;
-
-  Parse parse = Parse(gfeStr, primpolyStr, genpolyStr, msgStr);
-  gfe = parse.getGfe();
-  primpoly = parse.getPrimpoly();
-  genpoly = parse.getGenpoly();
-  msg = parse.getMsg();
-
-  return encode(gfe, primpoly, genpoly, msg);  
-}
 
 Package Encoder::encode(const unsigned int galois_field_exp,
 	   const vector<unsigned int> prim,
