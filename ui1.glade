@@ -18,11 +18,13 @@
         <child>
           <object class="GtkLabel" id="errmsg">
             <property name="width_request">300</property>
+            <property name="height_request">-1</property>
             <property name="visible">True</property>
             <property name="can_focus">False</property>
-            <property name="label" translatable="yes">Message contains too many symbols for the selected GF size and Generator Polynomial</property>
+            <property name="label" translatable="yes">Error</property>
             <property name="justify">center</property>
             <property name="wrap">True</property>
+            <property name="max_width_chars">23</property>
           </object>
           <packing>
             <property name="x">10</property>
@@ -102,7 +104,7 @@
           </object>
           <packing>
             <property name="x">10</property>
-            <property name="y">210</property>
+            <property name="y">200</property>
           </packing>
         </child>
         <child>
@@ -172,7 +174,7 @@
         <child>
           <object class="GtkComboBoxText" id="Gen Poly">
             <property name="width_request">300</property>
-            <property name="height_request">34</property>
+            <property name="height_request">25</property>
             <property name="visible">True</property>
             <property name="can_focus">False</property>
             <property name="active_id">gp1</property>
@@ -190,7 +192,7 @@
         <child>
           <object class="GtkScrolledWindow">
             <property name="width_request">300</property>
-            <property name="height_request">75</property>
+            <property name="height_request">90</property>
             <property name="visible">True</property>
             <property name="can_focus">True</property>
             <property name="shadow_type">in</property>
@@ -213,7 +215,7 @@
           </object>
           <packing>
             <property name="x">10</property>
-            <property name="y">235</property>
+            <property name="y">225</property>
           </packing>
         </child>
         <child>
@@ -233,7 +235,9 @@
                     <property name="visible">True</property>
                     <property name="can_focus">True</property>
                     <property name="editable">False</property>
+                    <property name="wrap_mode">word-char</property>
                     <property name="cursor_visible">False</property>
+                    <property name="monospace">True</property>
                   </object>
                 </child>
               </object>

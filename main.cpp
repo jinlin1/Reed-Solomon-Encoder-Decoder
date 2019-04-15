@@ -7,12 +7,16 @@
 
 void encode_button_clicked(Glib::RefPtr<Gtk::Builder> builder)
 {
+  Gtk::Window* error_window;
+  Gtk::Label* error_msg_widget;
   Gtk::ComboBoxText* gf_widget;
   Gtk::ComboBoxText* prim_poly_widget;
   Gtk::ComboBoxText* gen_poly_widget;
   Gtk::TextView* msg_widget;
   Gtk::TextView* output_widget;
   Gtk::TextBuffer* output_buffer;
+  builder->get_widget("errwin", error_window);
+  builder->get_widget("errmsg", error_msg_widget);
   builder->get_widget("GF Size", gf_widget);
   builder->get_widget("Prim Poly", prim_poly_widget);
   builder->get_widget("Gen Poly", gen_poly_widget);
@@ -26,14 +30,19 @@ void encode_button_clicked(Glib::RefPtr<Gtk::Builder> builder)
 
   Parse parse = Parse(gfeStr, primpolyStr, genpolyStr, msgStr);
 
-  Encoder encoder = Encoder();
-  Package package = encoder.encode(
-      parse.getGfe(), 
-      parse.getPrimpoly(), 
-      parse.getGenpoly(), 
-      parse.getMsg()); 
-
-  output_widget->get_buffer()->set_text(package.getOutPolyStr());
+  if( parse.getMsg().size() + parse.getGenpoly().size() >= 1<<parse.getGfe() ){
+    error_msg_widget->set_text("Message contains too many symbols for the selected GF size and Generator Polynomial");
+    error_window->show();
+    }
+  else {
+    Encoder encoder = Encoder();
+    Package package = encoder.encode(
+				     parse.getGfe(), 
+				     parse.getPrimpoly(), 
+				     parse.getGenpoly(), 
+				     parse.getMsg()); 
+    output_widget->get_buffer()->set_text(package.getOutPolyStr());
+  }
 
 }
 
