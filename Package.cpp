@@ -21,14 +21,24 @@ Package::Package(
   std::stringstream outputStr;
 
   int i;
-  for (i=0; i<=outputPoly.deg(); i++) {
-    outputStr << outputPoly[i];
-    if (i < length-1) outputStr << ",";
-  }
-  if (i < length) {
-    for (; i < length; i++) {
+
+  // Check if the polynomial is a zero polynomial
+  // Return a message of all zero
+  if (!outputPoly.valid()) {
+    for (i=0; i < length; i++) {
       outputStr << "0";
       if (i < length-1) outputStr << ",";
+    }
+  } else {
+    for (i=0; i<=outputPoly.deg(); i++) {
+      outputStr << outputPoly[i];
+      if (i < length-1) outputStr << ",";
+    }
+    if (i < length) {
+      for (; i < length; i++) {
+        outputStr << "0";
+        if (i < length-1) outputStr << ",";
+      }
     }
   }
 
