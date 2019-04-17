@@ -141,7 +141,6 @@
             <property name="height_request">25</property>
             <property name="visible">True</property>
             <property name="can_focus">False</property>
-            <property name="active_id">gf3</property>
             <items>
               <item id="gf3" translatable="yes">3</item>
               <item id="gf4" translatable="yes">4</item>
@@ -154,35 +153,12 @@
           </packing>
         </child>
         <child>
-          <object class="GtkComboBoxText" id="Prim Poly">
-            <property name="width_request">300</property>
-            <property name="height_request">25</property>
-            <property name="visible">True</property>
-            <property name="can_focus">False</property>
-            <property name="active_id">pp1</property>
-            <items>
-              <item id="1101" translatable="yes">x³+x+1</item>
-              <item id="10011" translatable="yes">x⁴+x³+1</item>
-              <item id="111000011" translatable="yes">x⁸+x⁷+x⁶+x+1</item>
-            </items>
-          </object>
-          <packing>
-            <property name="x">10</property>
-            <property name="y">95</property>
-          </packing>
-        </child>
-        <child>
           <object class="GtkComboBoxText" id="Gen Poly">
             <property name="width_request">300</property>
             <property name="height_request">25</property>
             <property name="visible">True</property>
             <property name="can_focus">False</property>
-            <property name="active_id">gp1</property>
-            <items>
-              <item id="2,4,3,6" translatable="yes">x⁴+3x³+1x²+2x+3</item>
-              <item id="2,4,8,3,6" translatable="yes">x⁵+11x⁴+4x³+14x²+10x+2</item>
-              <item id="2,4,8,16,32,64" translatable="yes">x⁶+126x⁵+197x⁴+44x³+104x²+120x+102</item>
-            </items>
+            <property name="active_id">2,4,3,6</property>
           </object>
           <packing>
             <property name="x">10</property>
@@ -258,6 +234,19 @@
           <packing>
             <property name="x">330</property>
             <property name="y">5</property>
+          </packing>
+        </child>
+        <child>
+          <object class="GtkComboBoxText" id="Prim Poly">
+            <property name="width_request">300</property>
+            <property name="height_request">25</property>
+            <property name="visible">True</property>
+            <property name="can_focus">False</property>
+            <property name="active_id">1101</property>
+          </object>
+          <packing>
+            <property name="x">10</property>
+            <property name="y">95</property>
           </packing>
         </child>
       </object>

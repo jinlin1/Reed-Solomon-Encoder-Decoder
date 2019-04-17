@@ -96,19 +96,29 @@ void change_combo_box(Glib::RefPtr<Gtk::Builder> builder) {
   builder->get_widget("Prim Poly", prim_poly_widget);
   builder->get_widget("Gen Poly", gen_poly_widget);
 
-  switch (gtk_combo_box_get_active(gf_widget)) {
-  case 0: 
-    break;
-  case 1:
-    break;
-  case 2:
-    break;
-  }
 
+  prim_poly_widget->remove_all();
+  gen_poly_widget->remove_all();
   
-  string gfeStr = gf_widget->get_active_text();
-  string primpolyStr = prim_poly_widget->get_active_id() ;
-  string genpolyStr = gen_poly_widget->get_active_id();
+  if (gf_widget->get_active_text() == "3") {
+    prim_poly_widget->append("1101","x³+x+1");
+    gen_poly_widget->append("2,4,3,6","x⁴+3x³+1x²+2x+3");
+    prim_poly_widget->set_active_id("1101");
+    gen_poly_widget->set_active_id("2,4,3,6");
+  }
+  else if (gf_widget->get_active_text() == "4") {
+    prim_poly_widget->append("10011","x⁴+x³+1");
+    gen_poly_widget->append("2,4,8,3,6","x⁵+11x⁴+4x³+14x²+10x+2");
+    prim_poly_widget->set_active_id("10011");
+    gen_poly_widget->set_active_id("2,4,8,3,6");
+  }
+  else if (gf_widget->get_active_text() == "8") {
+    prim_poly_widget->append("111000011","x⁸+x⁷+x⁶+x+1");
+    gen_poly_widget->append("2,4,8,16,32,64","x⁶+126x⁵+197x⁴+44x³+104x²+120x+102");
+    prim_poly_widget->set_active_id("111000011");
+    gen_poly_widget->set_active_id("2,4,8,16,32,64");
+  }
+  
 }
 
 void close_window(Gtk::Window* window) {
