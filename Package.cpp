@@ -24,7 +24,7 @@ Package::Package(
 
   // Check if the polynomial is a zero polynomial
   // Return a message of all zero
-  if (outputPoly.deg() == unsigned(-1)) {
+  if (!outputPoly.valid()) {
     for (i=0; i < length; i++) {
       outputStr << "0";
       if (i < length-1) outputStr << ",";
