@@ -28,21 +28,27 @@ void encode_button_clicked(Glib::RefPtr<Gtk::Builder> builder)
   string genpolyStr = gen_poly_widget->get_active_id();
   string msgStr = msg_widget->get_buffer()->get_text();
 
+  if(msgStr.empty()) {
+    error_msg_widget->set_text("Message cannot be empty");
+    error_window->show();
+    return;
+  }
+
   Parse parse = Parse(gfeStr, primpolyStr, genpolyStr, msgStr);
 
-  if( parse.getMsg().size() + parse.getGenpoly().size() >= 1<<parse.getGfe() ){
+  if(parse.getMsg().size() + parse.getGenpoly().size() >= 1 <<parse.getGfe() ){
     error_msg_widget->set_text("Message contains too many symbols for the selected GF size and Generator Polynomial");
     error_window->show();
-    }
-  else {
-    Encoder encoder = Encoder();
-    Package package = encoder.encode(
-				     parse.getGfe(), 
-				     parse.getPrimpoly(), 
-				     parse.getGenpoly(), 
-				     parse.getMsg()); 
-    output_widget->get_buffer()->set_text(package.getOutPolyStr());
+    return;
   }
+
+  Encoder encoder = Encoder();
+  Package package = encoder.encode(
+           parse.getGfe(), 
+           parse.getPrimpoly(), 
+           parse.getGenpoly(), 
+           parse.getMsg()); 
+  output_widget->get_buffer()->set_text(package.getOutPolyStr());
 
 }
 
@@ -69,7 +75,19 @@ void decode_button_clicked(Glib::RefPtr<Gtk::Builder> builder)
   string genpolyStr = gen_poly_widget->get_active_id();
   string msgStr = msg_widget->get_buffer()->get_text();
 
+  if(msgStr.empty()) {
+    error_msg_widget->set_text("Message cannot be empty");
+    error_window->show();
+    return;
+  }
+
   Parse parse = Parse(gfeStr, primpolyStr, genpolyStr, msgStr);
+
+  if(parse.getMsg().size() != pow(2, stoi(gfeStr)) -1) {
+    error_msg_widget->set_text("Message contains too few symbols for the selected GF size");
+    error_window->show();
+    return;
+  }
 
   Decoder decoder = Decoder();
   Package package = decoder.decode(
@@ -95,7 +113,6 @@ void change_combo_box(Glib::RefPtr<Gtk::Builder> builder) {
   builder->get_widget("GF Size", gf_widget);
   builder->get_widget("Prim Poly", prim_poly_widget);
   builder->get_widget("Gen Poly", gen_poly_widget);
-
 
   prim_poly_widget->remove_all();
   gen_poly_widget->remove_all();
