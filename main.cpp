@@ -87,6 +87,30 @@ void decode_button_clicked(Glib::RefPtr<Gtk::Builder> builder)
 
 }
 
+void change_combo_box(Glib::RefPtr<Gtk::Builder> builder) {
+  Gtk::ComboBoxText* gf_widget;
+  Gtk::ComboBoxText* prim_poly_widget;
+  Gtk::ComboBoxText* gen_poly_widget;
+
+  builder->get_widget("GF Size", gf_widget);
+  builder->get_widget("Prim Poly", prim_poly_widget);
+  builder->get_widget("Gen Poly", gen_poly_widget);
+
+  switch (gtk_combo_box_get_active(gf_widget)) {
+  case 0: 
+    break;
+  case 1:
+    break;
+  case 2:
+    break;
+  }
+
+  
+  string gfeStr = gf_widget->get_active_text();
+  string primpolyStr = prim_poly_widget->get_active_id() ;
+  string genpolyStr = gen_poly_widget->get_active_id();
+}
+
 void close_window(Gtk::Window* window) {
   window->hide();
 }
@@ -99,15 +123,20 @@ int main(int argc, char *argv[])
 
   Gtk::Window* window;
   Gtk::Window* errorWindow;
+  Gtk::ComboBoxText* gf_widget;
   Gtk::Button* encodeButton;
   Gtk::Button* decodeButton;
   Gtk::Button* errorButton;
   Glib::RefPtr<Gtk::Builder> builder = Gtk::Builder::create_from_file("ui1.glade");
   builder->get_widget("mainwin", window);
   builder->get_widget("errwin", errorWindow);
+  builder->get_widget("GF Size", gf_widget);
   builder->get_widget("encode", encodeButton);
   builder->get_widget("decode", decodeButton);
   builder->get_widget("errbutton", errorButton);
+
+  gf_widget->signal_changed().connect(sigc::bind<Glib::RefPtr<Gtk::Builder>>(sigc::ptr_fun(&change_combo_box), builder));
+  
   encodeButton->signal_clicked().connect(sigc::bind<Glib::RefPtr<Gtk::Builder>>(sigc::ptr_fun(&encode_button_clicked), builder));
   decodeButton->signal_clicked().connect(sigc::bind<Glib::RefPtr<Gtk::Builder>>(sigc::ptr_fun(&decode_button_clicked), builder));
   errorButton->signal_clicked().connect(sigc::bind<Gtk::Window*>(sigc::ptr_fun(&close_window), errorWindow));
