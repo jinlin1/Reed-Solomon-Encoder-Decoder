@@ -212,6 +212,7 @@
                     <property name="can_focus">True</property>
                     <property name="editable">False</property>
                     <property name="wrap_mode">word-char</property>
+                    <property name="right_margin">5</property>
                     <property name="cursor_visible">False</property>
                     <property name="monospace">True</property>
                   </object>
@@ -259,9 +260,6 @@
             <property name="wrap_mode">word-char</property>
             <property name="cursor_visible">False</property>
             <property name="monospace">True</property>
-            <style>
-              <class name="font:Monospace 10;"/>
-            </style>
           </object>
           <packing>
             <property name="x">330</property>
