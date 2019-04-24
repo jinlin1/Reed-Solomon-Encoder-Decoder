@@ -1,5 +1,7 @@
+#include <chrono>
 #include <gtkmm.h>
 #include <iostream>
+#include <sstream>
 #include "Package.h"
 #include "Parse.h"
 #include "Encoder.h"
@@ -14,7 +16,9 @@ void encode_button_clicked(Glib::RefPtr<Gtk::Builder> builder)
   Gtk::ComboBoxText* gen_poly_widget;
   Gtk::TextView* msg_widget;
   Gtk::TextView* output_widget;
+  Gtk::TextView* info_widget;
   Gtk::TextBuffer* output_buffer;
+  Gtk::TextBuffer* info_buffer;
   builder->get_widget("errwin", error_window);
   builder->get_widget("errmsg", error_msg_widget);
   builder->get_widget("GF Size", gf_widget);
@@ -22,12 +26,14 @@ void encode_button_clicked(Glib::RefPtr<Gtk::Builder> builder)
   builder->get_widget("Gen Poly", gen_poly_widget);
   builder->get_widget("msg", msg_widget);
   builder->get_widget("output", output_widget);
-
+  builder->get_widget("info", info_widget);
+  
   string gfeStr = gf_widget->get_active_text();
   string primpolyStr = prim_poly_widget->get_active_id() ;
   string genpolyStr = gen_poly_widget->get_active_id();
   string msgStr = msg_widget->get_buffer()->get_text();
-
+  stringstream ss;
+  
   if(msgStr.empty()) {
     error_msg_widget->set_text("Message cannot be empty");
     error_window->show();
@@ -42,12 +48,21 @@ void encode_button_clicked(Glib::RefPtr<Gtk::Builder> builder)
     return;
   }
 
+  auto start = chrono::steady_clock::now();
   Encoder encoder = Encoder();
   Package package = encoder.encode(
            parse.getGfe(), 
            parse.getPrimpoly(), 
            parse.getGenpoly(), 
-           parse.getMsg()); 
+           parse.getMsg());
+
+  auto end = chrono::steady_clock::now();
+  
+  int data_size = sizeof(parse.getMsg());
+  double elapsed_time_us = chrono::duration_cast<chrono::microseconds>(end - start).count();
+  ss << "MSG: " << data_size << " B; Elapsed Time: " << elapsed_time_us << " µs; xfer rate: "<< ( data_size * 8 * 1000000 ) / ( elapsed_time_us * 1024 ) << " kbps";
+
+  info_widget->get_buffer()->set_text(ss.str());  
   output_widget->get_buffer()->set_text(package.getOutPolyStr());
 
 }
@@ -61,7 +76,9 @@ void decode_button_clicked(Glib::RefPtr<Gtk::Builder> builder)
   Gtk::ComboBoxText* gen_poly_widget;
   Gtk::TextView* msg_widget;
   Gtk::TextView* output_widget;
+  Gtk::TextView* info_widget;
   Gtk::TextBuffer* output_buffer;
+  Gtk::TextBuffer* info_buffer;
   builder->get_widget("errwin", error_window);
   builder->get_widget("errmsg", error_msg_widget);
   builder->get_widget("GF Size", gf_widget);
@@ -69,12 +86,14 @@ void decode_button_clicked(Glib::RefPtr<Gtk::Builder> builder)
   builder->get_widget("Gen Poly", gen_poly_widget);
   builder->get_widget("msg", msg_widget);
   builder->get_widget("output", output_widget);
-
+  builder->get_widget("info", info_widget);
+  
   string gfeStr = gf_widget->get_active_text();
   string primpolyStr = prim_poly_widget->get_active_id() ;
   string genpolyStr = gen_poly_widget->get_active_id();
   string msgStr = msg_widget->get_buffer()->get_text();
-
+  stringstream ss;
+  
   if(msgStr.empty()) {
     error_msg_widget->set_text("Message cannot be empty");
     error_window->show();
@@ -89,12 +108,23 @@ void decode_button_clicked(Glib::RefPtr<Gtk::Builder> builder)
     return;
   }
 
+  auto start = chrono::steady_clock::now();
+  
   Decoder decoder = Decoder();
   Package package = decoder.decode(
       parse.getGfe(), 
       parse.getPrimpoly(), 
       parse.getGenpoly(), 
       parse.getMsg());
+
+  auto end = chrono::steady_clock::now();
+  
+  int data_size = sizeof(parse.getMsg());
+  double elapsed_time_us = chrono::duration_cast<chrono::microseconds>(end - start).count();
+
+  ss << "MSG: " << data_size << " B; Elapsed Time: " << elapsed_time_us << " µs; xfer rate: "<< ( data_size * 8 * 1000000 ) / ( elapsed_time_us * 1024 ) << " kbps";
+    
+  info_widget->get_buffer()->set_text(ss.str());  
 
   if(package.getSuccess()) {
     output_widget->get_buffer()->set_text(package.getOutPolyStr());
