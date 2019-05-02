@@ -148,14 +148,14 @@ void populate_combo_box(Glib::RefPtr<Gtk::Builder> builder) {
  while(!infile.eof()) {
     getline(infile, lineTemp);
 
-    if(isGaloisField) {
-      gf_widget->append(lineTemp);
-      isGaloisField = false;
+    if(lineTemp.length() == 0) {
+      isGaloisField = true;
       continue;
     }
 
-    if(lineTemp.length() == 0) {
-      isGaloisField = true;
+    if(isGaloisField) {
+      gf_widget->append(lineTemp);
+      isGaloisField = false;
     }
  }
 
