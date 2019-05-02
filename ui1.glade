@@ -142,9 +142,6 @@
             <property name="visible">True</property>
             <property name="can_focus">False</property>
             <items>
-              <item id="gf3" translatable="yes">3</item>
-              <item id="gf4" translatable="yes">4</item>
-              <item id="gf8" translatable="yes">8</item>
             </items>
           </object>
           <packing>

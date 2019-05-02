@@ -1,6 +1,7 @@
 #include <chrono>
 #include <gtkmm.h>
 #include <iostream>
+#include <fstream>
 #include <sstream>
 #include "Package.h"
 #include "Parse.h"
@@ -135,6 +136,31 @@ void decode_button_clicked(Glib::RefPtr<Gtk::Builder> builder)
 
 }
 
+void populate_combo_box(Glib::RefPtr<Gtk::Builder> builder) {
+
+  Gtk::ComboBoxText* gf_widget;
+  builder->get_widget("GF Size", gf_widget);
+
+  ifstream infile("rsed.config");
+  string lineTemp;
+  bool isGaloisField = true;
+
+ while(!infile.eof()) {
+    getline(infile, lineTemp);
+
+    if(isGaloisField) {
+      gf_widget->append(lineTemp);
+      isGaloisField = false;
+      continue;
+    }
+
+    if(lineTemp.length() == 0) {
+      isGaloisField = true;
+    }
+ }
+
+}
+
 void change_combo_box(Glib::RefPtr<Gtk::Builder> builder) {
   Gtk::ComboBoxText* gf_widget;
   Gtk::ComboBoxText* prim_poly_widget;
@@ -146,24 +172,54 @@ void change_combo_box(Glib::RefPtr<Gtk::Builder> builder) {
 
   prim_poly_widget->remove_all();
   gen_poly_widget->remove_all();
-  
-  if (gf_widget->get_active_text() == "3") {
-    prim_poly_widget->append("1101","x³+x+1");
-    gen_poly_widget->append("2,4,3,6","x⁴+3x³+1x²+2x+3");
-    prim_poly_widget->set_active_id("1101");
-    gen_poly_widget->set_active_id("2,4,3,6");
-  }
-  else if (gf_widget->get_active_text() == "4") {
-    prim_poly_widget->append("10011","x⁴+x³+1");
-    gen_poly_widget->append("2,4,8,3,6","x⁵+11x⁴+4x³+14x²+10x+2");
-    prim_poly_widget->set_active_id("10011");
-    gen_poly_widget->set_active_id("2,4,8,3,6");
-  }
-  else if (gf_widget->get_active_text() == "8") {
-    prim_poly_widget->append("111000011","x⁸+x⁷+x⁶+x+1");
-    gen_poly_widget->append("2,4,8,16,32,64","x⁶+126x⁵+197x⁴+44x³+104x²+120x+102");
-    prim_poly_widget->set_active_id("111000011");
-    gen_poly_widget->set_active_id("2,4,8,16,32,64");
+
+  ifstream infile("rsed.config");
+  string lineTemp;
+  bool selectedField = false;
+
+  while(!infile.eof()) {
+    getline(infile, lineTemp);
+
+    if(gf_widget->get_active_text() == lineTemp) {
+      selectedField = true;
+    } else {
+      selectedField = false;
+    }
+
+    getline(infile, lineTemp);
+    bool isPrimPoly = true;
+    bool isActivePrimPolyId = true;
+    bool isActiveGenPolyId = true;
+
+    while (lineTemp.length() != 0) {
+
+      stringstream ss(lineTemp);
+      string tokenId;
+      string tokenValue;
+
+      getline(ss, tokenId, '|');
+      getline(ss, tokenValue, '|');
+
+      if(selectedField) {
+        if(isPrimPoly) {
+          prim_poly_widget->append(tokenId,tokenValue);
+          if(isActivePrimPolyId) {
+            prim_poly_widget->set_active_id(tokenId);
+          }
+          isActivePrimPolyId = false;
+          isPrimPoly = false;
+        } else {
+          gen_poly_widget->append(tokenId,tokenValue);
+          if(isActiveGenPolyId) {
+            gen_poly_widget->set_active_id(tokenId);
+          }
+          isActiveGenPolyId = false;
+          isPrimPoly = true;
+        }
+      }
+      getline(infile, lineTemp);
+
+    }
   }
   
 }
@@ -191,6 +247,8 @@ int main(int argc, char *argv[])
   builder->get_widget("encode", encodeButton);
   builder->get_widget("decode", decodeButton);
   builder->get_widget("errbutton", errorButton);
+
+  populate_combo_box(builder);
 
   gf_widget->signal_changed().connect(sigc::bind<Glib::RefPtr<Gtk::Builder>>(sigc::ptr_fun(&change_combo_box), builder));
   
