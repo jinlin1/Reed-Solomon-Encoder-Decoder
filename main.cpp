@@ -159,6 +159,8 @@ void populate_combo_box(Glib::RefPtr<Gtk::Builder> builder) {
     }
  }
 
+ infile.close();
+
 }
 
 void change_combo_box(Glib::RefPtr<Gtk::Builder> builder) {
@@ -221,6 +223,8 @@ void change_combo_box(Glib::RefPtr<Gtk::Builder> builder) {
 
     }
   }
+
+  infile.close();
   
 }
 
