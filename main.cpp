@@ -143,19 +143,22 @@ void populate_combo_box(Glib::RefPtr<Gtk::Builder> builder) {
 
   ifstream infile("rsed.config");
   string lineTemp;
-  bool isGaloisField = true;
 
  while(!infile.eof()) {
     getline(infile, lineTemp);
 
     if(lineTemp.length() == 0) {
-      isGaloisField = true;
       continue;
     }
 
-    if(isGaloisField) {
-      gf_widget->append(lineTemp);
-      isGaloisField = false;
+    if(lineTemp.find("GF:") != string::npos) {
+      stringstream ss(lineTemp);
+      string label;
+      string gfValue;
+
+      getline(ss, label, ':');
+      getline(ss, gfValue, ':');
+      gf_widget->append(gfValue);
     }
  }
 
@@ -182,45 +185,61 @@ void change_combo_box(Glib::RefPtr<Gtk::Builder> builder) {
   while(!infile.eof()) {
     getline(infile, lineTemp);
 
-    if(gf_widget->get_active_text() == lineTemp) {
-      selectedField = true;
-    } else {
-      selectedField = false;
+    if(lineTemp.length() == 0) {
+      continue;
     }
 
-    getline(infile, lineTemp);
-    bool isPrimPoly = true;
-    bool isActivePrimPolyId = true;
-    bool isActiveGenPolyId = true;
-
-    while (lineTemp.length() != 0) {
-
+    if(lineTemp.find("GF:") != string::npos) {
       stringstream ss(lineTemp);
-      string tokenId;
-      string tokenValue;
+      string label;
+      string gfValue;
 
-      getline(ss, tokenId, '|');
-      getline(ss, tokenValue, '|');
-
-      if(selectedField) {
-        if(isPrimPoly) {
-          prim_poly_widget->append(tokenId,tokenValue);
-          if(isActivePrimPolyId) {
-            prim_poly_widget->set_active_id(tokenId);
-          }
-          isActivePrimPolyId = false;
-          isPrimPoly = false;
-        } else {
-          gen_poly_widget->append(tokenId,tokenValue);
-          if(isActiveGenPolyId) {
-            gen_poly_widget->set_active_id(tokenId);
-          }
-          isActiveGenPolyId = false;
-          isPrimPoly = true;
-        }
+      getline(ss, label, ':');
+      getline(ss, gfValue, ':');
+      if(gf_widget->get_active_text() == gfValue) {
+        selectedField = true;
       }
-      getline(infile, lineTemp);
+    }
 
+    if(selectedField) {
+      
+      getline(infile, lineTemp);
+      bool isActivePrimPolyId = true;
+      bool isActiveGenPolyId = true;
+
+      while (lineTemp.length() != 0) {
+
+        stringstream ss(lineTemp);
+        string label;
+        string value;
+
+        getline(ss, label, ':');
+        getline(ss, value, ':');
+
+        stringstream token(value);
+
+        string tokenId;
+        string tokenValue;
+
+        getline(token, tokenId, '|');
+        getline(token, tokenValue, '|');
+
+        if(lineTemp.find("Prim:") != string::npos) {
+            prim_poly_widget->append(tokenId,tokenValue);
+            if(isActivePrimPolyId) {
+              prim_poly_widget->set_active_id(tokenId);
+            }
+            isActivePrimPolyId = false;
+        } else if(lineTemp.find("Gen:") != string::npos) {
+            gen_poly_widget->append(tokenId,tokenValue);
+            if(isActiveGenPolyId) {
+              gen_poly_widget->set_active_id(tokenId);
+            }
+            isActiveGenPolyId = false;
+        }
+        getline(infile, lineTemp);
+      }
+      break;
     }
   }
 
